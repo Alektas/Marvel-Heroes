@@ -1,0 +1,87 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+}
+
+android {
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
+
+    defaultConfig {
+        applicationId "alektas.marvelheroes"
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
+        versionCode 1
+        versionName "0.1.0"
+
+        archivesBaseName = "MarvelHeroes-${versionName}"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += [
+                        "room.schemaLocation": "$projectDir/schemas".toString(),
+                        "room.incremental"   : "true"]
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-debug'
+        }
+    }
+    buildFeatures {
+        viewBinding true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    api project(':core')
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
+    implementation "androidx.core:core-ktx:${versions.androidx_core_ktx}"
+    implementation "androidx.appcompat:appcompat:${versions.androidx_appcompat}"
+    implementation "com.google.android.material:material:${versions.material}"
+    implementation "androidx.constraintlayout:constraintlayout:${versions.androidx_constraint}"
+
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:${versions.androidx_lifecycle}"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.androidx_lifecycle}"
+    implementation "androidx.lifecycle:lifecycle-common-java8:${versions.androidx_lifecycle}"
+
+    implementation "androidx.room:room-runtime:${versions.androidx_room}"
+    implementation "androidx.room:room-rxjava3:${versions.androidx_room}"
+    kapt "androidx.room:room-compiler:${versions.androidx_room}"
+
+    implementation "com.google.dagger:hilt-android:${versions.hilt}"
+    kapt "com.google.dagger:hilt-android-compiler:${versions.hilt}"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:${versions.androidx_hilt}"
+    kapt "androidx.hilt:hilt-compiler:${versions.androidx_hilt}"
+
+    implementation "androidx.paging:paging-runtime-ktx:${versions.paging}"
+    implementation "androidx.paging:paging-rxjava3:${versions.paging}"
+
+    implementation "io.reactivex.rxjava3:rxjava:${versions.rxjava}"
+
+    testImplementation "junit:junit:${versions.junit}"
+    androidTestImplementation "androidx.test.ext:junit:${versions.junit}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${versions.androidx_espresso}"
+}
