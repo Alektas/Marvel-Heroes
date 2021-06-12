@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">MarvelHeroes</string>
+    <string name="app_name">Marvel Heroes</string>
+    <string name="placeholder_heroes">Heroes not found</string>
+    <string name="hint_hero_name">Enter name</string>
 </resources>
