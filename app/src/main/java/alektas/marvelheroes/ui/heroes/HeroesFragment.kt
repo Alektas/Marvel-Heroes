@@ -1,5 +1,6 @@
 package alektas.marvelheroes.ui.heroes
 
+import alektas.marvelheroes.R
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +8,7 @@ import alektas.marvelheroes.core.ui.BaseFragment
 import alektas.marvelheroes.databinding.FragmentHeroesBinding
 import alektas.marvelheroes.ui.heroes.adapters.HeroesAdapter
 import alektas.marvelheroes.ui.heroes.adapters.HeroesLoadStateAdapter
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
@@ -51,6 +53,18 @@ class HeroesFragment : BaseFragment<FragmentHeroesBinding, HeroesViewModel>() {
             .autoDispose(AndroidLifecycleScopeProvider.from(lifecycle))
             .subscribe {
                 tvHeroesPlaceholder.isVisible = it
+            }
+        
+        viewModel.error
+            .autoDispose(AndroidLifecycleScopeProvider.from(lifecycle))
+            .subscribe { e ->
+                val dialog = AlertDialog.Builder(requireContext())
+                    .setTitle(getString(R.string.title_error))
+                    .setMessage(e.localizedMessage ?: getString(R.string.error_unknown))
+                    .setPositiveButton(R.string.btn_retry) { _, _ -> heroesAdapter.refresh() }
+                    .setNeutralButton(android.R.string.cancel) { _, _ -> }
+                    .create()
+                dialog.show()
             }
     }
     
