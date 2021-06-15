@@ -5,6 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import alektas.marvelheroes.core.ui.BaseFragment
 import alektas.marvelheroes.databinding.FragmentHeroesBinding
+import alektas.marvelheroes.ui.heroes.adapters.HeroesAdapter
+import alektas.marvelheroes.ui.heroes.adapters.HeroesLoadStateAdapter
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
@@ -24,13 +26,17 @@ class HeroesFragment : BaseFragment<FragmentHeroesBinding, HeroesViewModel>() {
     }
     
     override val initView: FragmentHeroesBinding.(v: View) -> Unit = {
-        val heroesAdapter = HeroesAdapter()
-        heroesAdapter.addLoadStateListener { loadState ->
-            viewModel.onLoadStateChanged(loadState, heroesAdapter.itemCount)
+        val heroesAdapter = HeroesAdapter().apply {
+            addLoadStateListener { loadState ->
+                viewModel.onLoadStateChanged(loadState, itemCount)
+            }
         }
         rvHeroes.apply {
             setHasFixedSize(true)
-            adapter = heroesAdapter
+            adapter = heroesAdapter.withLoadStateHeaderAndFooter(
+                header = HeroesLoadStateAdapter(heroesAdapter::retry),
+                footer = HeroesLoadStateAdapter(heroesAdapter::retry)
+            )
         }
         
         etHeroesQuery.doOnTextChanged { text, _, _, _ -> viewModel.onQueryChanged(text?.toString() ?: "") }
