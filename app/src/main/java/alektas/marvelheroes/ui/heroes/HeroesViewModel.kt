@@ -15,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -28,8 +29,12 @@ class HeroesViewModel @Inject constructor(
     
     private val querySubject: BehaviorSubject<String> = BehaviorSubject.createDefault("")
     private val placeholderSubject: BehaviorSubject<Boolean> = BehaviorSubject.createDefault(true)
+    private val errorSubject: PublishSubject<Throwable> = PublishSubject.create()
     
     val placeholder: Observable<Boolean> = placeholderSubject
+        .observeOn(AndroidSchedulers.mainThread())
+    
+    val error: Observable<Throwable> = errorSubject
         .observeOn(AndroidSchedulers.mainThread())
     
     val heroes: Observable<PagingData<HeroItem>> = querySubject
@@ -58,6 +63,10 @@ class HeroesViewModel @Inject constructor(
                 && loadState.append.endOfPaginationReached
                 && itemCount < 1
         )
+        val refreshState = loadState.refresh
+        if (refreshState is LoadState.Error) {
+            errorSubject.onNext(refreshState.error)
+        }
     }
     
     companion object {
