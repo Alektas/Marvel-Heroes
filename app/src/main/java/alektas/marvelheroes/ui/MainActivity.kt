@@ -1,17 +1,20 @@
-package alektas.marvelheroes
+package alektas.marvelheroes.ui
 
+import alektas.marvelheroes.R
+import alektas.marvelheroes.ui.heroes.HeroesFragment
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import alektas.marvelheroes.ui.searchlist.SearchFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.main_activity)
+        setContentView(R.layout.activity_main)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, SearchFragment.newInstance())
+                .replace(R.id.container, HeroesFragment.newInstance())
                 .commitNow()
         }
     }
