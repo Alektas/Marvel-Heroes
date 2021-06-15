@@ -1,4 +1,4 @@
-package alektas.marvelheroes.ui.heroes
+package alektas.marvelheroes.ui.heroes.adapters
 
 import alektas.marvelheroes.R
 import alektas.marvelheroes.databinding.ItemHeroBinding
@@ -16,7 +16,7 @@ class HeroesAdapter : PagingDataAdapter<HeroItem, HeroesAdapter.ViewHolder>(Hero
         ViewHolder(ItemHeroBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        getItem(position)?.let { holder.bind(it) }
+        getItem(position)?.let { holder.bind(it) } // TODO: handle nulls as placeholders
     }
     
     class ViewHolder(private val binding: ItemHeroBinding): RecyclerView.ViewHolder(binding.root) {
